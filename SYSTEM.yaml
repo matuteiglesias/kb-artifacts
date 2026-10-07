@@ -2,7 +2,7 @@
 schema_version: 1
 id: kb.artifacts.selector
 repository:
-  id: repo.kb-artifacts
+  id: repo.gpt-digests
   github: matuteiglesias/kb-artifacts
 domain: knowledge
 system: kb.artifacts
@@ -27,7 +27,7 @@ interfaces:
 upstream:
 - repo.kb-contracts
 downstream:
-- repo.context-routing
+- repo.context
 - repo.matias-context-mcp
 canonical_commands:
 - kb-artifact --help
