@@ -258,10 +258,17 @@ def select(
     aliases = {str(path): f"corpus:{request.corpus}/{kind}:{index}" for index, (kind, path) in enumerate(paths, start=1)} if request.corpus else {}
     payloads = [_payload(record, decision, aliases.get(record.provenance.partition)) for record, decision in selected]
     manifest = _build_legacy_manifest(request, paths, records, errors, duplicate_count, len(selected))
-    rendered = {
+    body_outputs = {
         "selected.jsonl": _render_jsonl(payloads),
         "selected.csv": _render_csv(selected, payloads),
         "artifact.md": _render_markdown(selected, request.group_by),
+    }
+    manifest["output_checksums"] = {
+        filename: hashlib.sha256(content).hexdigest()
+        for filename, content in sorted(body_outputs.items())
+    }
+    rendered = {
+        **body_outputs,
         "manifest.json": (json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode("utf-8"),
     }
     _stage_and_promote(output, rendered)
