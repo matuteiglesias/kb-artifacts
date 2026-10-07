@@ -55,6 +55,7 @@ verification:
   - source_ref identity and adapter-output SHA-256 are preserved through the selected evidence and selection manifest
   - selected evidence and the selection manifest use logical corpus aliases and contain no producer checkout or temporary work paths
   - Media Monitor summary evidence is consumed through the same generic JSONL reader and named-corpus selection path; the producer owns the summary-to-evidence adapter
+  - Media Monitor commit 84e0373d362fec6c3d81b6c39be1a68fd64c3d2f is pinned for the cross-repository two-channel date/topic selection proof
   unknowns:
   - consequential publication or promotion commands remain outside ordinary verification
   - this fixture proof establishes one adapter/consumer seam, not universal interoperability for every Knowledge Inspect artifact family
