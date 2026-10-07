@@ -1,0 +1,39 @@
+name: M7 Media Monitor evidence proof
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out KB Artifacts
+        uses: actions/checkout@v4
+
+      - name: Check out pinned Media Monitor producer
+        uses: actions/checkout@v4
+        with:
+          repository: matuteiglesias/media_monitor
+          ref: 84e0373d362fec6c3d81b6c39be1a68fd64c3d2f
+          path: .producer/media-monitor
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install KB Artifacts and producer fixture dependencies
+        run: |
+          python -m pip install --upgrade pip ".[dev]"
+          python -m pip install jsonschema PyYAML
+
+      - name: Prove producer adapter through generic selector
+        env:
+          MEDIA_MONITOR_ROOT: ${{ github.workspace }}/.producer/media-monitor
+        run: make media-monitor-proof
