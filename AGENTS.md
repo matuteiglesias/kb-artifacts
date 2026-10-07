@@ -4,7 +4,7 @@
 
 Maintain deterministic selection, manifest, promotion, and publication mechanics for governed knowledge evidence.
 
-This repository owns how eligible inputs become selected evidence artifacts. It does not own source-document meaning, shared interoperability contracts, general analysis, context routing, paper parsing, or MCP access policy.
+This repository owns how eligible inputs become selected evidence artifacts. It may consume declared producer-local JSONL evidence interfaces through its existing generic reader. It does not own source-document meaning, producer-specific conversion, shared interoperability contracts, general analysis, context routing, paper parsing, or MCP access policy.
 
 ## Authority boundary
 
@@ -24,6 +24,7 @@ Agents must not independently:
 - rewrite selected outputs or manifests by hand;
 - copy source semantics or shared schemas into a competing local authority;
 - ingest arbitrary new source content;
+- add a Knowledge Inspect-specific parser when the declared producer-local JSONL interface can be consumed through the generic reader;
 - expose private source material, absolute paths, secrets, or large bodies in fixtures or logs;
 - modify producer, routing, contract, or MCP repositories.
 
@@ -60,6 +61,7 @@ Use the current root Make surface:
 make test
 make smoke
 make contract-release-verify
+make knowledge-inspect-proof KNOWLEDGE_INSPECT_ROOT=/path/to/pinned/knowledge-inspect
 ```
 
 `make install` changes the local environment and should not be part of an ordinary check unless setup is explicitly required.
@@ -67,6 +69,22 @@ make contract-release-verify
 Before introducing a generic `make check`, confirm that the composed commands are deterministic, offline, and acceptably bounded.
 
 Publication or promotion commands exposed through `kbctl` are consequential. Do not run them unless the task explicitly identifies the target, expected manifest, destination, and approval state.
+
+## Knowledge Inspect adoption boundary
+
+The accepted producer interface is
+`producer-local:knowledge-inspect.evidence-jsonl@1`.
+
+The cross-repository proof must:
+
+- pin an exact Knowledge Inspect commit;
+- execute the producer-owned adapter against its producer-owned sanitized fixture;
+- consume the result through the ordinary generic JSONL reader;
+- select through a named corpus profile so manifests use logical aliases;
+- prove input checksum continuity and absence of physical paths;
+- perform no promotion or publication.
+
+No Knowledge Inspect native summary parser belongs in this repository.
 
 ## Contract changes
 

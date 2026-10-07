@@ -1,0 +1,37 @@
+name: M7 Knowledge Inspect evidence proof
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out KB Artifacts
+        uses: actions/checkout@v4
+
+      - name: Check out pinned Knowledge Inspect producer
+        uses: actions/checkout@v4
+        with:
+          repository: matuteiglesias/knowledge-inspect
+          ref: 7832ed5f33df03e87b2b146cd51f798121c79dc8
+          path: .producer/knowledge-inspect
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install KB Artifacts
+        run: python -m pip install --upgrade pip ".[dev]"
+
+      - name: Prove producer adapter through generic selector
+        env:
+          KNOWLEDGE_INSPECT_ROOT: ${{ github.workspace }}/.producer/knowledge-inspect
+        run: make knowledge-inspect-proof

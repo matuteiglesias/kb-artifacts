@@ -22,10 +22,12 @@ authority:
 interfaces:
   consumes:
   - input:jsonl-evidence-collections
+  - producer-local:knowledge-inspect.evidence-jsonl@1
   produces:
   - artifact:kb.selected-evidence@1
 upstream:
 - repo.kb-contracts
+- repo.knowledge-inspect
 downstream:
 - repo.context
 - repo.matias-context-mcp
@@ -35,17 +37,23 @@ canonical_commands:
 - make smoke
 - make contract-release-verify
 - make distribution-test
+- make knowledge-inspect-proof KNOWLEDGE_INSPECT_ROOT=/path/to/pinned/knowledge-inspect
 generated_paths:
 - artifacts/
 - runs/
 verification:
-  status: metadata-only
-  last_verified: '2026-08-28'
-  command: make smoke
+  status: bounded-cross-repo-proof
+  last_verified: '2026-10-07'
+  command: make knowledge-inspect-proof KNOWLEDGE_INSPECT_ROOT=/path/to/pinned/knowledge-inspect
+  evidence:
+  - PR #13 cross-repository CI pins Knowledge Inspect commit 7832ed5f33df03e87b2b146cd51f798121c79dc8
+  - the producer-owned adapter emits producer-local:knowledge-inspect.evidence-jsonl@1 from a governed summary_bus fixture
+  - KB Artifacts consumes that output only through the existing generic JSONL reader and named corpus profile
+  - source_ref identity and adapter-output SHA-256 are preserved through the selected evidence and selection manifest
+  - selected evidence and the selection manifest use logical corpus aliases and contain no producer checkout or temporary work paths
   unknowns:
-  - canonical commands were reconciled against README.md and AGENTS.md but not executed during W2
-  - W3 found no direct Knowledge Inspect run-manifest or summary-bus input seam; current ingestion is producer-agnostic JSONL
   - consequential publication or promotion commands remain outside ordinary verification
+  - this fixture proof establishes one adapter/consumer seam, not universal interoperability for every Knowledge Inspect artifact family
 maintenance:
   cadence: quarterly
   next_review: '2026-11-01'
