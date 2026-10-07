@@ -1,10 +1,12 @@
 PY ?= python3
-.PHONY: test install smoke distribution-test contract-release-verify knowledge-inspect-proof
+.PHONY: test install smoke distribution-test contract-release-verify knowledge-inspect-proof media-monitor-proof
 
 CONTRACT_RELEASE_MANIFEST ?= interop/vendor/kb-interop.v1-rc1/release.json
 CONTRACT_RELEASE_ROOT ?= interop/vendor/kb-interop.v1-rc1
 KNOWLEDGE_INSPECT_ROOT ?=
+MEDIA_MONITOR_ROOT ?=
 M7_OUTPUT_ROOT ?= artifacts/runs/m7-knowledge-inspect-fixture
+MEDIA_M7_OUTPUT_ROOT ?= artifacts/runs/m7-media-monitor-fixture
 
 test:
 	$(PY) -m pytest -q
@@ -26,3 +28,9 @@ knowledge-inspect-proof:
 	PYTHONPATH=src $(PY) tools/verify_knowledge_inspect_adapter.py \
 	  --producer-root "$(KNOWLEDGE_INSPECT_ROOT)" \
 	  --output-root "$(M7_OUTPUT_ROOT)"
+
+media-monitor-proof:
+	@test -n "$(MEDIA_MONITOR_ROOT)" || (echo "MEDIA_MONITOR_ROOT is required" >&2; exit 2)
+	PYTHONPATH=src $(PY) tools/verify_media_monitor_adapter.py \
+	  --producer-root "$(MEDIA_MONITOR_ROOT)" \
+	  --output-root "$(MEDIA_M7_OUTPUT_ROOT)"

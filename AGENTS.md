@@ -86,6 +86,22 @@ The cross-repository proof must:
 
 No Knowledge Inspect native summary parser belongs in this repository.
 
+## Media Monitor adoption boundary
+
+The accepted producer interface is `producer-local:media-monitor.evidence-jsonl@1`.
+
+The cross-repository proof must:
+
+- pin an exact Media Monitor commit;
+- execute Media Monitor's producer-owned sanitized evidence fixture and producer-owned adapter;
+- consume the result through the ordinary generic JSONL reader;
+- select by explicit date window and topic pattern through a named corpus profile;
+- preserve media-summary source_ref identity, channel annotations, governed summary bodies and key points;
+- prove adapter-output checksum continuity and absence of physical paths;
+- perform no promotion, publication, model call, or media-specific parsing inside KB Artifacts.
+
+Knowledge Inspect is not an ingestion dependency for this path.
+
 ## Contract changes
 
 When changing a manifest, profile, artifact identity, or shared interface:
