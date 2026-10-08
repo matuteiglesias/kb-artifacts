@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 
@@ -79,6 +80,10 @@ def test_profile_backed_cli_list_explore_and_select_are_json_or_private(tmp_path
     assert str(tmp_path) not in (output / "manifest.json").read_text()
     assert str(tmp_path) not in (output / "selected.jsonl").read_text()
     assert json.loads((output / "manifest.json").read_text())["selection_request"]["query"] == {"gte": {"field": "score", "value": 4}}
+    manifest = json.loads((output / "manifest.json").read_text())
+    assert manifest["output_checksums"]["selected.jsonl"] == hashlib.sha256(
+        (output / "selected.jsonl").read_bytes()
+    ).hexdigest()
 
 
 def test_profile_backed_select_python_and_direct_globs_remain_supported(tmp_path: Path) -> None:
