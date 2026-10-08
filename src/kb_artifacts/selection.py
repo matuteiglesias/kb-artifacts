@@ -263,10 +263,11 @@ def select(
         "selected.csv": _render_csv(selected, payloads),
         "artifact.md": _render_markdown(selected, request.group_by),
     }
-    manifest["output_checksums"] = {
-        filename: hashlib.sha256(content).hexdigest()
-        for filename, content in sorted(body_outputs.items())
-    }
+    if request.corpus is not None:
+        manifest["output_checksums"] = {
+            filename: hashlib.sha256(content).hexdigest()
+            for filename, content in sorted(body_outputs.items())
+        }
     rendered = {
         **body_outputs,
         "manifest.json": (json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode("utf-8"),
