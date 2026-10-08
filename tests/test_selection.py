@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import csv
+import hashlib
 import json
 from pathlib import Path
 
@@ -26,6 +27,7 @@ def test_select_filters_both_buses_and_exports_identical_ids(tmp_path: Path) -> 
     assert all(identifier in markdown for identifier in jsonl_ids)
     manifest = json.loads((output / "manifest.json").read_text())
     assert manifest["counts"] == {"deduplicated": 0, "invalid": 0, "scanned": 3, "selected": 2}
+    assert "output_checksums" not in manifest
 
 
 def test_select_deduplication_and_empty_are_explicit(tmp_path: Path) -> None:
